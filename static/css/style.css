@@ -1,0 +1,278 @@
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.center-title{
+  text-align: center;
+  background-color: #24373e;
+  color: white;
+  font-weight: normal;
+  padding: 1rem;
+}
+
+html{
+  height: 100%;
+}
+
+body {
+  font-family: sans-serif;
+  background-color: #8197b3;
+  min-height: 100%;
+}
+
+.navbar{
+  background-color: #006b8e;
+  width: 100%;
+}
+
+.navbar ul{
+  list-style: none;
+  margin-left: 3rem;
+}
+
+.navbar li{
+  width: 5%;
+  display: inline-block;
+  padding: 0,5rem;
+}
+
+.navbar li img{
+  width: 60%;
+}
+
+.navbar li.object-name{
+  width: 65%;
+  text-align: center;
+  vertical-align: top;
+  margin-top: 0.5rem;
+}
+
+.custom_button{
+  background-color: #006b8e;
+  border: none;
+}
+
+.custom_button:hover{
+  background-color: #8197b3;
+}
+
+.navbar a{
+  color: white;
+  display: inline-block;
+  font-size: 20px;
+  padding: 10px;
+  text-decoration: none;
+}
+
+.navbar a:hover {
+  color: black;
+}
+
+.main-menu{
+  width: fit-content;
+  height: fit-content;
+  position: absolute;
+  margin: 3rem 20rem;
+  background-color: #006b8e;
+}
+
+.main-menu-section{ 
+  padding: 1rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.main-menu-option{
+  display: inline-block;
+  margin: 1rem;
+  width: 15rem;
+}
+
+.main-menu-option img{
+  width: 12rem;
+  height: 12rem;
+}
+
+.main-menu-option a{
+  display: block;
+  text-decoration: none;
+  color: white;
+}
+
+.main-menu-option a:hover{
+  color: #003459;
+}
+
+.object-form{
+  display: inline-block;
+  min-height: 31em;
+  width: -moz-available;
+}
+
+.object-list{
+  width: 30%;
+  display: inline-block;
+  vertical-align: top;
+  background-color: #006b8e;
+  height: fit-content;
+  margin-bottom: 0;
+}
+
+.object-list ul{
+  text-decoration: none;
+  list-style: none;
+}
+
+.object-details-list{
+  background-color: #003459;
+  padding: 1rem;
+  margin-top: 1rem;
+  border-radius: 5%;
+}
+
+.object-details-list li{
+  margin: 1rem;
+}
+
+.object-list-item{
+  padding: 0.5rem;
+  margin: 1rem;
+  width: fit-content;
+  background-color: #003459;
+  border-radius: 5%;
+}
+
+.object-list-item a{
+  color: white;
+  text-decoration: none;
+}
+
+.object-list-item a:hover{
+  background-color: #8197b3;
+  color: #003459;
+}
+
+.user-related-link{
+  color: white;
+  text-decoration: none;
+}
+
+.user-related-link:hover{
+  color: #003459;
+}
+
+.object-form-data{
+  width: 69%;
+  display: inline-block;
+}
+
+.object-form-data ul{
+  list-style: none;
+}
+
+.object-form-data-header{
+  margin: 2rem;
+  background-color: #006b8e;
+  border-radius: 2%;
+  color: white;
+}
+
+.object-form-data-header li{
+  display: inline-block;
+  padding: 1rem;
+}
+
+.object-form-data-body{
+  margin: 3rem;
+  text-align: justify;
+}
+
+.object-form-module-description{
+  width: 80%;
+  margin: 3rem 7rem;
+  padding: 3rem;
+  background-color: #006b8e;
+  border-radius: 2%;
+  color: white;
+}
+
+.object-form-data-body-description{
+  display: inline-block;
+  width: 40%;
+  min-width: 10rem;
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #006b8e;
+  border-radius: 2%;
+  color: white;
+  vertical-align: top;
+}
+
+.object-form-data-body-edit{
+  width: fit-content;
+  height: fit-content;
+  position: inherit;
+  margin: auto;
+  background-color: #006b8e;
+}
+
+.object-form-data-body-edit button{
+  width: fit-content;
+  height: fit-content;
+  background-color: #003459;
+  color: white;
+  margin: 1rem;
+  padding: 1rem;
+  border-radius: 5%;
+}
+
+.object-form-data-body-description h1{
+  padding: 1rem;
+  width: fit-content;
+  text-align: justify;
+  background-color: #003459;
+  border-radius: 10%;
+  font-size: medium;
+}
+
+.object-form-data-body-description p{
+  margin-top: 1rem;
+  padding: 1rem 1rem 1rem 1rem;
+  text-align: justify;
+  background-color: #003459;
+  border-radius: 3%;
+}
+
+.object-form-data-body-description textarea{
+  width: 15rem;
+}
+
+.object-form-data-body-object-related{
+  list-style: none;
+  display: inline-block;
+  width: 40%;
+  vertical-align: top;
+  padding: 1rem;
+  margin: 1rem;
+  background-color: #006b8e;
+  border-radius: 2%;
+  color: white;
+}
+
+.object-form-data-body-object-related h1{
+  padding: 1rem 1rem 1rem 1rem;
+  background-color: #003459;
+  width: fit-content;
+  border-radius: 5%;
+  font-size: medium;
+}
+
+.object-form-data-body-object-related li{
+  margin: 1rem;
+  padding: 1rem;
+  background-color: #003459;
+  width: fit-content;
+  border-radius: 5%;
+}

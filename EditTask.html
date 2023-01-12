@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Tareas</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+  </head>
+  <body>
+
+    <header class="body-header">
+      <h1 class="center-title">Project Management System</h1>
+    </header>
+
+    <section class="main-section">
+      <nav class="navbar">
+        <ul>
+          <li>
+            <a href="MainMenu.html"><img src="./static/images/home.png" alt="Home"></a>
+          </li>
+          <li>
+            <a href="NewTask.html"><img src="./static/images/create.png" alt="Crear"></a>
+          </li>
+          <li>
+            <a href=""><img src="./static/images/find.png" alt="Buscar"></a>
+          </li>
+          <li>
+            <a href=""><img src="./static/images/filter.png" alt="Filtrar"></a>
+          </li>
+          <li class="object-name"><input name="name" id="name" type="text" size="25rem" maxlength="200" placeholder="Inserte el nombre de la tarea." required></li>
+          <li>
+            <button class='custom_button' id="btnUpdate"><img src="./static/images/edit.png" alt="Editar"></button>
+          </li>
+          <li>
+            <button class='custom_button' id="btnDelete"><img src="./static/images/delete.png" alt="Eliminar"></button>
+          </li>
+        </ul>
+      </nav>
+
+      <section class="object-form">
+
+        <section class="object-list">
+          <ul id="ulObjects"></ul>
+        </section>
+
+        <section class="object-form-data">
+          <section class="object-form-data-header">
+            <ul>
+              <li id="selectStoryList"></li>
+              <li id="selectUserList"></li>
+              <li id="selectStateList"></li>
+            </ul>
+          </section>
+          <section class="object-form-data-body">
+            <section class="object-form-data-body-description">
+              <h1>Descripcion</h1>
+              <br>
+              <textarea id="description" name="description" rows="4" cols="50" required></textarea>
+            </section>
+            <section class="object-form-data-body-description">
+              <h1>Detalles</h1>
+              <ul class="object-details-list">
+                <li>Tiempo Estimado: <input id="estimatedTimeValue" type="number" step="0.01" placeholder="Tiempo estimado (horas)"></li>
+                <li>Tiempo Invertido: <input id="investedTimeValue" type="number" step="0.01" placeholder="Tiempo invertido (horas)"></li>
+                <li>Tiempo Restante: <input id="remainingTimeValue" type="number" step="0.01" placeholder="Tiempo restante (horas)"></li>
+              </ul>
+            </section>
+            <section class="object-form-data-body-edit">
+              <button class='custom_button' id="btnSave">Guardar Cambios</button>
+              <button class='custom_button' id="btnDiscard">Cancelar</button>
+            </section>
+          </section>
+        </section>
+
+      </section>
+
+    </section>
+    <script>
+      $(document).ready(function () {
+        Objects();
+        ThisObject();
+      });
+
+      function GetURLParameter(sParam)
+      {
+          var sPageURL = window.location.search.substring(1);
+          var sURLVariables = sPageURL.split('&');
+          for (var i = 0; i < sURLVariables.length; i++) 
+          {
+              var sParameterName = sURLVariables[i].split('=');
+              if (sParameterName[0] == sParam) 
+              {
+                  return sParameterName[1];
+              }
+          }
+      }
+
+      function Objects() {
+          $.ajax({
+              type: 'GET',
+              dataType: 'json',
+              url: "https://project-management-system-vocn.onrender.com/api/tasks/", success: function (result) {
+                 
+                  var totalCount = result.length;
+                  var structureUl = "<ul>";
+                  for (let i = 0; i < totalCount; i++) {
+                      structureUl +=
+                          "  <li class=\"object-list-item\"><a href=\"TaskDetails.html?id=" + result[i].id + "\">" + result[i].name + "</a></li>";
+                  }
+                  structureUl += "</ul>"
+
+                  $("#ulObjects").html(structureUl);
+            
+              }
+          });
+
+      }
+
+      function ThisObject(){
+        var object_id = GetURLParameter('id');
+        if(object_id){
+          $.ajax({
+              type: 'GET',
+              dataType: 'json',
+              url: "https://project-management-system-vocn.onrender.com/api/tasks/"+ object_id + "/", success: function (result) {
+
+                $('#name').val(result.name);
+
+                var selectStoryListStruct = "Historia de Usuario:  <select name=\"userStories\" id=\"userStories\">";
+                var storiesList = GetUserStories();
+                var totalStories = storiesList.length;
+                for (let i = 0; i < totalStories; i++) {
+                  if (storiesList[i].id == result.user_story){
+                    selectStoryListStruct +=
+                    "  <option selected=\"selected\" value=" + storiesList[i].id + "\">" + storiesList[i].name + "</option>";
+                  }
+                  else{
+                    selectStoryListStruct +=
+                      "  <option value=" + storiesList[i].id + "\">" + storiesList[i].name + "</option>";
+                  }
+                }
+                selectStoryListStruct += "</select>"
+                $('#selectStoryList').html(selectStoryListStruct);
+
+                var usersList = GetUsers();
+                var selectUserListStruct = "Usuario Asignado: <select name=\"users\" id=\"users\">";
+                var totalUsers = usersList.length;
+                for (let i = 0; i < totalUsers; i++) {
+                  if (usersList[i].id == result.assigned_user){
+                    selectUserListStruct +=
+                    "  <option selected=\"selected\" value=" + usersList[i].id + "\">" + usersList[i].name + " " + usersList[i].lastname + "</option>";
+                  }
+                  else{
+                    selectUserListStruct +=
+                      "  <option value=" + usersList[i].id + "\">" + usersList[i].name + " " + usersList[i].lastname + "</option>";
+                  }
+                }
+                selectUserListStruct += "</select>"
+                $('#selectUserList').html(selectUserListStruct);
+
+                var selectStateListStruct = "Estado: <select name=\"states\" id=\"states\">";
+                if(result.state == "Borrador"){
+                  selectStateListStruct += "  <option selected=\"selected\" value=\"borrador\">Borrador</option>" +
+                    "  <option value=\"asignada\">Asignada</option>" +
+                    "  <option value=\"suspendida\">Suspendida</option>" +
+                    "  <option value=\"finalizada\">Finalizada</option>" +
+                    "  <option value=\"cancelada\">Cancelada</option>";
+                }
+                else if(result.state == "Asignada"){
+                  selectStateListStruct += "  <option value=\"borrador\">Borrador</option>" +
+                    "  <option selected=\"selected\" value=\"asignada\">Asignada</option>" +
+                    "  <option value=\"suspendida\">Suspendida</option>" +
+                    "  <option value=\"finalizada\">Finalizada</option>" +
+                    "  <option value=\"cancelada\">Cancelada</option>";
+                }
+                else if(result.state == "Suspendida"){
+                  selectStateListStruct += "  <option value=\"borrador\">Borrador</option>" +
+                    "  <option value=\"asignada\">Asignada</option>" +
+                    "  <option selected=\"selected\" value=\"suspendida\">Suspendida</option>" +
+                    "  <option value=\"finalizada\">Finalizada</option>" +
+                    "  <option value=\"cancelada\">Cancelada</option>";
+                }
+                else if(result.state == "Finalizada"){
+                  selectStateListStruct += "  <option value=\"borrador\">Borrador</option>" +
+                    "  <option value=\"asignada\">Asignada</option>" +
+                    "  <option value=\"suspendida\">Suspendida</option>" +
+                    "  <option selected=\"selected\" value=\"finalizada\">Finalizada</option>" +
+                    "  <option value=\"cancelada\">Cancelada</option>";
+                }
+                else if(result.state == "Cancelada"){
+                  selectStateListStruct += "  <option value=\"borrador\">Borrador</option>" +
+                    "  <option value=\"asignada\">Asignada</option>" +
+                    "  <option value=\"suspendida\">Suspendida</option>" +
+                    "  <option value=\"finalizada\">Finalizada</option>" +
+                    "  <option selected=\"selected\" value=\"cancelada\">Cancelada</option>";
+                }
+                else{
+                  selectStateListStruct += 
+                    "  <option value=\"borrador\">Borrador</option>" +
+                    "  <option value=\"asignada\">Asignada</option>" +
+                    "  <option value=\"suspendida\">Suspendida</option>" +
+                    "  <option value=\"finalizada\">Finalizada</option>" +
+                    "  <option value=\"cancelada\">Cancelada</option>";
+                }
+                selectStateListStruct += "</select>"
+                $('#selectStateList').html(selectStateListStruct);
+
+                $('#description').val(result.description);
+                $('#estimatedTimeValue').val(result.estimated_time);
+                $('#investedTimeValue').val(result.invested_time);
+                $('#remainingTimeValue').val(result.remaining_time);
+
+              }
+          });
+        }
+      }
+
+      function GetUsers(){
+        var usersList;
+        $.ajax({
+          async: false,
+          type: 'GET',
+          dataType: 'json',
+          url: "https://project-management-system-vocn.onrender.com/api/users/", success: function (result) {
+            usersList = result;
+          }
+        });
+        return usersList
+      }
+
+      function GetUserStories(userStoryId){
+        var userStorieslist;
+        $.ajax({
+          async: false,
+          type: 'GET',
+          dataType: 'json',
+          url: "https://project-management-system-vocn.onrender.com/api/user_stories/", success: function (result) {
+            userStorieslist = result
+          }
+        });
+        return userStorieslist
+      }
+
+      function GetUserName(userId){
+        var userName;
+        $.ajax({
+          async: false,
+          type: 'GET',
+          dataType: 'json',
+          url: "https://project-management-system-vocn.onrender.com/api/users/"+ userId + "/", success: function (result) {
+            userName = result.name + " " + result.lastname;
+          }
+        });
+        return userName
+      }
+
+      $('#btnDelete').click(function () {
+        confirm_val = confirm("Esta seguro de querer eliminar este registro?")
+        console.info(confirm_val)
+        if(confirm_val){
+          var object_id = GetURLParameter('id');
+          if(object_id){
+            $.ajax({
+                type: 'DELETE',
+                dataType: 'json',
+
+                url: "https://project-management-system-vocn.onrender.com/api/tasks/"+object_id+"/",
+                error: function (xhr, status, error) {
+
+                    var err_msg = ''
+                    for (var prop in xhr.responseJSON) {
+                        err_msg += prop + ': ' + xhr.responseJSON[prop] + '\n';
+                    }
+
+                    alert(err_msg);
+                },
+                success: function (result) {
+                  window.location.href = 'TasksBase.html';
+                }
+            });
+          }
+        }
+      });
+      
+      $('#btnSave').click(function (){
+        var object_id = GetURLParameter('id');
+        if(object_id){
+
+          let name = $('#name').val();
+          let userStories = parseInt($('#userStories').val());
+          let user = parseInt($('#users').val());
+          let state = $('#states').val();
+          let description = $('#description').val();
+          let estimatedTime = $('#estimatedTimeValue').val();
+          let investedTime = $('#investedTimeValue').val();
+          let remainingTime = $('#remainingTimeValue').val();
+
+          $.ajax({
+              type: 'PATCH',
+              dataType: 'json',
+              data: {
+                  "name": name,
+                  "user_story": userStories,
+                  "assigned_user": user,
+                  "state": state,
+                  "description": description,
+                  "estimated_time": estimatedTime,
+                  "invested_time": investedTime,
+                  "remaining_time": remainingTime,
+              },
+              url: "https://project-management-system-vocn.onrender.com/api/tasks/"+object_id+"/",
+              error: function (xhr, status, error) {
+
+                  var err_msg = ''
+                  for (var prop in xhr.responseJSON) {
+                      err_msg += prop + ': ' + xhr.responseJSON[prop] + '\n';
+                  }
+
+                  alert(err_msg);
+              },
+              success: function (result) {
+                window.location.href = 'TaskDetails.html?id=' + object_id;
+              }
+          });
+        }
+      });
+
+      $('#btnDiscard').click(function (){
+        var object_id = GetURLParameter('id');
+        if(object_id){
+          window.location.href = 'TaskDetails.html?id=' + object_id;
+        }
+      });
+    </script>
+  </body>
+</html>
+

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Usuarios</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+  </head>
+  <body>
+
+    <header class="body-header">
+      <h1 class="center-title">Project Management System</h1>
+    </header>
+
+    <section class="main-section">
+      <nav class="navbar">
+        <ul>
+          <li>
+            <a href="MainMenu.html"><img src="./static/images/home.png" alt="Home"></a>
+          </li>
+          <li>
+            <a href="NewUser.html"><img src="./static/images/create.png" alt="Crear"></a>
+          </li>
+          <li>
+            <a href=""><img src="./static/images/find.png" alt="Buscar"></a>
+          </li>
+          <li>
+            <a href=""><img src="./static/images/filter.png" alt="Filtrar"></a>
+          </li>
+          <li class="object-name"><h1>Nuevo Usuario</h1></li>
+          <li>
+            <button id="btnSubmit" type="submit" class="custom_button"><img src="./static/images/edit.png" alt="Guardar"></button>
+          </li>
+          <li>
+            <a href="UsersBase.html"><img src="./static/images/delete.png" alt="Descartar"></a>
+          </li>
+        </ul>
+      </nav>
+
+      <section class="object-form">
+
+        <section class="object-list">
+          <ul id="ulObjects"></ul>
+        </section>
+
+        <section class="object-form-data">
+          <section class="object-form-data-header">
+            <ul>
+              <li>Nombre: <input name="name" id="name" type="text" size="25rem" maxlength="200" placeholder="Inserte el nombre del usuario." required></li>
+              <li>Apellido: <input name="lastname" id="lastname" type="text" size="25rem" maxlength="200" placeholder="Inserte el apellido del usuario." required></li>
+              <li>Estado: 
+                <select name="states" id="states">
+                  <option value="activo">Activo</option>
+                  <option value="inactivo">Inactivo</option>
+                </select>
+              </li>
+            </ul>
+          </section>
+          <section class="object-form-data-body">
+            <section class="object-form-data-body-description">
+              <h1>Detalles</h1>
+              <ul class="object-details-list">
+                <li> Perfil: <input name="profile" id="profile" type="text" size="25rem" maxlength="100" placeholder="Inserte el perfil del usuario." required></li>
+                <li> Email: <input name="email" id="email" type="email" size="25rem" maxlength="200" placeholder="Inserte el email del usuario." required></li>
+                <li> Password: <input name="password" id="password" type="password" size="25rem" maxlength="200" placeholder="Inserte el password del usuario." required></li>
+              </ul>
+            </section>
+          </section>
+        </section>
+
+      </section>
+
+    </section>
+    <script>
+      $(document).ready(function () {
+        Objects();
+      });
+
+      function GetURLParameter(sParam)
+      {
+          var sPageURL = window.location.search.substring(1);
+          var sURLVariables = sPageURL.split('&');
+          for (var i = 0; i < sURLVariables.length; i++) 
+          {
+              var sParameterName = sURLVariables[i].split('=');
+              if (sParameterName[0] == sParam) 
+              {
+                  return sParameterName[1];
+              }
+          }
+      }
+
+      function Objects() {
+          $.ajax({
+              type: 'GET',
+              dataType: 'json',
+              url: "https://project-management-system-vocn.onrender.com/api/users/", success: function (result) {
+                 
+                  var totalCount = result.length;
+                  var structureUl = "<ul>";
+                  for (let i = 0; i < totalCount; i++) {
+                      structureUl +=
+                          "  <li class=\"object-list-item\"><a href=\"UserDetails.html?id=" + result[i].id + "\">" + result[i].name + " " + result[i].lastname + "</a></li>";
+                  }
+                  structureUl += "</ul>"
+
+                  $("#ulObjects").html(structureUl);
+            
+              }
+          });
+
+      }
+
+      $('#btnSubmit').click(function () {
+
+        let name = $('#name').val();
+        let lastname = $('#lastname').val();
+        let state = $('#states').val();
+        let profile = $('#profile').val();
+        let email = $('#email').val();
+        let password = $('#password').val();
+
+        $.ajax({
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                "name": name,
+                "lastname": lastname,
+                "state": state,
+                "profile": profile,
+                "email": email,
+                "password": password,
+            },
+
+            url: "https://project-management-system-vocn.onrender.com/api/users/",
+            error: function (xhr, status, error) {
+
+                var err_msg = ''
+                for (var prop in xhr.responseJSON) {
+                    err_msg += prop + ': ' + xhr.responseJSON[prop] + '\n';
+                }
+
+                alert(err_msg);
+            },
+            success: function (result) {
+
+              alert('Data Saved Successfully.');
+              Objects();
+              window.location.href = 'UsersBase.html';
+
+              $('#name').val("");
+              $('#lastname').val("");
+              $('#states').val("");
+              $('#profile').val("");
+              $('#email').val("");
+              $('#password').val("");
+            }
+        });
+      });
+
+    </script>
+  </body>
+</html>
+

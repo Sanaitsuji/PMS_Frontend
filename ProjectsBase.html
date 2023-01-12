@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    
+    <title>Proyectos</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="./static/css/style.css">
+  </head>
+  <body>
+
+    <header class="body-header">
+      <h1 class="center-title">Project Management System</h1>
+    </header>
+
+    <section>
+      <nav class="navbar">
+        <ul>
+          <li>
+            <a href="MainMenu.html"><img src="./static/images/home.png" alt="Home"></a>
+          </li>
+          <li>
+            <a href="NewProject.html"><img src="./static/images/create.png" alt="Crear"></a>
+          </li>
+          <li>
+            <a href=""><img src="./static/images/find.png" alt="Buscar"></a>
+          </li>
+          <li>
+            <a href=""><img src="./static/images/filter.png" alt="Filtrar"></a>
+          </li>
+          <li class="object-name">
+            <a href="">Proyectos</a>
+          </li>
+        </ul>
+      </nav>
+
+      <section class="object-form">
+
+        <section class="object-list">
+          <ulproject id="ulProject"></ulproject>
+        </section>
+
+        <section class="object-form-data">
+          <section class="object-form-module-description">
+            <p>
+              En esta seccion encontrara todos los proyectos registrados con su respectiva informacion.
+              <br><br>
+              Para iniciar por favor seleccione alguno de los Proyectos listados en el menu izquierdo o puede crear uno nuevo haciendo click <a href="NewProject.html">aqui</a>.
+            </p>
+          </section>
+        </section>
+
+      </section>
+
+    </section>
+    <script>
+      $(document).ready(function () {
+          Objects();
+      });
+
+      function Objects() {
+          $.ajax({
+              type: 'GET',
+              dataType: 'json',
+              url: "https://project-management-system-vocn.onrender.com/api/projects/", success: function (result) {
+                 
+                  var totalCount = result.length;
+                  var structureUl = "<ul>";
+                  for (let i = 0; i < totalCount; i++) {
+                      structureUl +=
+                          "  <li class=\"object-list-item\"><a href=\"ProjectDetails.html?id=" + result[i].id + "\">" + result[i].name + "</a></li>";
+                  }
+                  structureUl += "</ul>"
+
+                  $("#ulProject").html(structureUl);
+            
+              }
+          });
+
+      }
+
+    </script>
+  </body>
+</html>
+
